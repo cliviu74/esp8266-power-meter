@@ -15,8 +15,8 @@ const char* password = WIFI_PASSWORD;
 // MQTT settings
 const char* mqttServer = MQTT_HOST;
 const int mqttPort = MQTT_PORT;
-// const char* mqttUser = MQTT_USER;
-// const char* mqttPassword = MQTT_PASS;
+const char* mqttUser = MQTT_USER;
+const char* mqttPassword = MQTT_PASS;
 
 
 int calcPower() {
@@ -42,9 +42,9 @@ void setup() {
 }
 
 void loop() {
-  Serial.printf("Connecting to MQTT host: %s ", mqttServer);
   while (!client.connected()) {
-    if (client.connect("ESP8266Client" )) {
+    Serial.printf("Connecting to MQTT host: %s ", mqttServer);
+    if (client.connect("ESP8266Client", mqttUser, mqttPassword )) {
       Serial.println("connected"); 
     } else {
       Serial.print("failed with state ");
@@ -55,5 +55,5 @@ void loop() {
   int power = calcPower();
   Serial.printf("Publishing %s to topic %s\n",String(power).c_str(), MQTT_TOPIC );
   client.publish(MQTT_TOPIC, String(power).c_str());
-  delay(2000);
+  delay(LOOP_DELAY*1000);
 }
